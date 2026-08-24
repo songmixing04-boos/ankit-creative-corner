@@ -31,6 +31,7 @@ function rewriteText(text: string): string {
     .replace(/Sunny\s*X\s*Khan\s*Global\s*Studies/gi, BRAND)
     .replace(/Khan\s*Global\s*Studies/gi, BRAND)
     .replace(/Sunny\s*Kgs/gi, BRAND)
+    .replace(/\bVikash?\b/gi, "Ankit")
     .replace(/\bKGS\b/g, BRAND)
     .replace(/Sunny/g, BRAND)
     .replace(/SUNNY/g, BRAND.toUpperCase())
