@@ -4,9 +4,9 @@ const TELEGRAM_URL = "https://t.me/+oStLl-wO2dMyZmM1";
 const WHATSAPP_URL =
   "https://whatsapp.com/channel/0029VbDCEcsGehEQt6q1lu36";
 
-const BRAND = "Ankit";
+const BRAND = "KGS x Ankit Chaudhary";
 
-const LOGO_URL = "/__l5e/assets-v1/dcd46f3b-1f6e-4f7e-ae92-7d9b9c4010fd/ankit-logo.png";
+const LOGO_URL = "/ankit-logo.png";
 
 /** Tokens that must never be touched by the text rewriting (asset paths, api urls). */
 const PROTECTED = /(https?:\/\/[^\s"'<>)]+|[\w./-]+\.(?:jpg|jpeg|png|webp|gif|svg|ico|json|html|css|js|mp4|m3u8))/gi;
