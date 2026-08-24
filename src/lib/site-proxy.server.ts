@@ -11,10 +11,13 @@ const LOGO_URL = "/ankit-logo.png";
 /** Tokens that must never be touched by the text rewriting (asset paths, api urls). */
 const PROTECTED = /(https?:\/\/[^\s"'<>)]+|[\w./-]+\.(?:jpg|jpeg|png|webp|gif|svg|ico|json|html|css|js|mp4|m3u8))/gi;
 
+const TOKEN = "\u0000BRAND\u0000";
+
 function rewriteUrls(text: string): string {
   return text
-    // brand logo -> ours
+    // brand logos -> ours
     .replace(/https?:\/\/i\.postimg\.cc\/x1M0YN5Z\/sunny\.jpg/gi, LOGO_URL)
+    .replace(/https?:\/\/i\.postimg\.cc\/3r[Bb]8SZGp\/[^\s"'<>)]+/g, LOGO_URL)
     // social links -> ours
     .replace(/https?:\/\/(?:www\.)?t\.me\/[^\s"'<>)]*/gi, TELEGRAM_URL)
     .replace(
@@ -28,20 +31,27 @@ function rewriteUrls(text: string): string {
 
 function rewriteText(text: string): string {
   return text
-    .replace(/Sunny\s*X\s*Khan\s*Global\s*Studies/gi, BRAND)
-    .replace(/Khan\s*Global\s*Studies/gi, BRAND)
-    .replace(/Sunny\s*Kgs/gi, BRAND)
+    // every owner/brand mention collapses to a single placeholder first, so the
+    // final brand string never gets re-matched and duplicated.
+    .replace(/Sunny\s*X\s*Khan\s*Global\s*Studies/gi, TOKEN)
+    .replace(/Khan\s*Global\s*Studies/gi, TOKEN)
+    .replace(/Sunny\s*Kgs/gi, TOKEN)
+    .replace(/\bKGS\b/gi, TOKEN)
+    .replace(/\bSunny\b/gi, TOKEN)
+    // "Vikash Test Series" (plain + stylised unicode letters) -> Ankit
     .replace(/\bVikash?\b/gi, "Ankit")
-    .replace(/\bKGS\b/g, BRAND)
-    .replace(/Sunny/g, BRAND)
-    .replace(/SUNNY/g, BRAND.toUpperCase())
-    .replace(/sunny/g, BRAND.toLowerCase())
+    .replace(/V[\u0300-\u0fff\u1cd0-\uabff\ud800-\udfff]*k[\u0300-\u0fff\u1cd0-\uabff\ud800-\udfff]*s[\u0300-\u0fff\u1cd0-\uabff\ud800-\udfff]*(?=\s*Test\s*Series)/g, "Ankit")
+    // collapse any accidental repeats, then swap the placeholder for the brand
+    .replace(new RegExp(`(?:${TOKEN}[\\s x]*)*${TOKEN}`, "g"), TOKEN)
+    .split(TOKEN)
+    .join(BRAND)
     // preview/iframe safe navigation: top-frame nav & new tabs are blocked
     .replace(/window\.top\.location/g, "window.location")
     .replace(/window\.parent\.location/g, "window.location")
     .replace(/target=(["'])_blank\1/g, 'target="_self"')
     .replace(/target=\\?"_blank\\?"/g, 'target="_self"');
 }
+
 
 
 /** Applies branding rewrites while leaving URLs / file paths intact. */
